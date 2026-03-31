@@ -1,11 +1,15 @@
 package emp.cad.api.comissao.service;
 
 import emp.cad.api.comissao.dto.CadastroComissaoDTO;
+import emp.cad.api.comissao.dto.DetalhamentoComissaoDTO;
 import emp.cad.api.comissao.dto.InscricaoComissaoDTO;
+import emp.cad.api.comissao.dto.ListagemComissaoDTO;
 import emp.cad.api.comissao.entity.Comissao;
 import emp.cad.api.comissao.repository.ComissaoRepository;
 import emp.cad.api.funcionario.repository.FuncionarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,5 +48,35 @@ public class ComissaoService {
 
         comissao.adicionarMembro(funcionario);
 
+    }
+
+    // Listar apenas as comissões que estão com ativo = true
+    public Page<ListagemComissaoDTO> listarAtivas(Pageable paginacao) {
+        return comissaoRepository.findAllByAtivoTrue(paginacao).map(ListagemComissaoDTO::new);
+    }
+
+    // Buscar detalhes de uma comissão específica
+    public DetalhamentoComissaoDTO detalhar(Long id) {
+        var comissao = comissaoRepository.getReferenceById(id);
+        return new DetalhamentoComissaoDTO(comissao);
+    }
+
+    // Regra para desinscrever (Remover da tabela de ligação)
+    public void desinscrever(Long idComissao, Long idFuncionario) {
+        var comissao = comissaoRepository.getReferenceById(idComissao);
+        var funcionario = funcionarioRepository.getReferenceById(idFuncionario);
+
+        if (!comissao.getMembros().contains(funcionario)) {
+            throw new IllegalArgumentException("Este funcionário não está inscrito nesta comissão.");
+        }
+
+        comissao.removerMembro(funcionario);
+        // O Hibernate cuidará do DELETE na tabela comissoes_funcionarios
+    }
+
+    // Exclusão lógica da comissão inteira
+    public void excluir(Long id) {
+        var comissao = comissaoRepository.getReferenceById(id);
+        comissao.inativar();
     }
 }
