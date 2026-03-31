@@ -55,13 +55,13 @@ public class ComissaoService {
         return comissaoRepository.findAllByAtivoTrue(paginacao).map(ListagemComissaoDTO::new);
     }
 
-    // Buscar detalhes de uma comissão específica
+
     public DetalhamentoComissaoDTO detalhar(Long id) {
         var comissao = comissaoRepository.getReferenceById(id);
         return new DetalhamentoComissaoDTO(comissao);
     }
 
-    // Regra para desinscrever (Remover da tabela de ligação)
+
     public void desinscrever(Long idComissao, Long idFuncionario) {
         var comissao = comissaoRepository.getReferenceById(idComissao);
         var funcionario = funcionarioRepository.getReferenceById(idFuncionario);
@@ -71,10 +71,10 @@ public class ComissaoService {
         }
 
         comissao.removerMembro(funcionario);
-        // O Hibernate cuidará do DELETE na tabela comissoes_funcionarios
+
     }
 
-    // Exclusão lógica da comissão inteira
+
     public void excluir(Long id) {
         var comissao = comissaoRepository.getReferenceById(id);
         comissao.inativar();
