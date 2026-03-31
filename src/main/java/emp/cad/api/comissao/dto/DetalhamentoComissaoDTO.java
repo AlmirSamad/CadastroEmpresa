@@ -8,7 +8,7 @@ public record DetalhamentoComissaoDTO(
         String nome,
         emp.cad.api.comissao.dto.TemaComissao tema,
         String descricao,
-        List<String> membrosNames // Apenas os nomes para simplificar agora
+        List<String> membrosNames
 ) {
     public DetalhamentoComissaoDTO(Comissao comissao) {
         this(comissao.getId(), comissao.getNome(), comissao.getTema(), comissao.getDescricao(),

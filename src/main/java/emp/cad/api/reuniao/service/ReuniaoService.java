@@ -4,6 +4,7 @@ import emp.cad.api.comissao.repository.ComissaoRepository;
 import emp.cad.api.funcionario.repository.FuncionarioRepository;
 import emp.cad.api.reuniao.dto.DadosAgendamentoReuniao;
 import emp.cad.api.reuniao.dto.DadosConfrimacaoPresenca;
+import emp.cad.api.reuniao.dto.DadosDetalhamentoReuniao;
 import emp.cad.api.reuniao.entity.Reuniao;
 import emp.cad.api.reuniao.repository.ReuniaoRepository;
 import emp.cad.api.reuniao.service.validacoes.ValidadorPresenca;
@@ -57,5 +58,12 @@ public class ReuniaoService {
 
 
         reuniao.confirmarParticipante(funcionario);
+    }
+
+    public DadosDetalhamentoReuniao detalhar(Long id) {
+        var reuniao = reuniaoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Reunião não encontrada."));
+
+        return new DadosDetalhamentoReuniao(reuniao);
     }
 }
