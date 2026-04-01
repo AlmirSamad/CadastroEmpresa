@@ -6,6 +6,7 @@ import emp.cad.api.comissao.dto.ListagemComissaoDTO;
 
 import emp.cad.api.comissao.dto.DetalhamentoComissaoDTO;
 import emp.cad.api.comissao.service.ComissaoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
-@RequestMapping("/comissoes") // Ajustado para o plural e com barra
+@RequestMapping("/comissoes")
+@SecurityRequirement(name = "bearer-key")
 public class ComissaoController {
 
     @Autowired

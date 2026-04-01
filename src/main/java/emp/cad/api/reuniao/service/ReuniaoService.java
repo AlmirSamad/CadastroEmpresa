@@ -3,6 +3,7 @@ package emp.cad.api.reuniao.service;
 import emp.cad.api.comissao.repository.ComissaoRepository;
 import emp.cad.api.funcionario.repository.FuncionarioRepository;
 import emp.cad.api.reuniao.dto.DadosAgendamentoReuniao;
+import emp.cad.api.reuniao.dto.DadosAtualizarReuniao;
 import emp.cad.api.reuniao.dto.DadosConfrimacaoPresenca;
 import emp.cad.api.reuniao.dto.DadosDetalhamentoReuniao;
 import emp.cad.api.reuniao.entity.Reuniao;
@@ -65,5 +66,19 @@ public class ReuniaoService {
                 .orElseThrow(() -> new IllegalArgumentException("Reunião não encontrada."));
 
         return new DadosDetalhamentoReuniao(reuniao);
+    }
+
+    public Reuniao atualizar(Long id, DadosAtualizarReuniao dados) {
+        var reuniao = reuniaoRepository.getReferenceById(id);
+
+        if (dados.dataHora() != null) {
+
+            var dadosParaValidacao = new DadosAgendamentoReuniao(reuniao.getComissao().getId(), dados.dataHora(), reuniao.getPauta());
+
+            validadorReuniaos.forEach(v -> v.validar(dadosParaValidacao));
+        }
+        reuniao.atualizarinformacoes(dados);
+
+        return reuniao;
     }
 }

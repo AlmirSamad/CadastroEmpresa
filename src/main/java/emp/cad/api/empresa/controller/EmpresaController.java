@@ -8,6 +8,7 @@ import emp.cad.api.empresa.dto.ListagemEmpresasDTO;
 import emp.cad.api.empresa.entity.Empresa;
 import emp.cad.api.empresa.repository.EmpresaRepository;
 import emp.cad.api.funcionario.repository.FuncionarioRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("empresa")
+@SecurityRequirement(name = "bearer-key")
 public class EmpresaController {
 
     @Autowired

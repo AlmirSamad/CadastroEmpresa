@@ -2,11 +2,14 @@ package emp.cad.api.reuniao.entity;
 
 import emp.cad.api.comissao.entity.Comissao;
 import emp.cad.api.funcionario.entity.Funcionario;
+import emp.cad.api.reuniao.dto.DadosAtualizarReuniao;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -54,5 +57,17 @@ public class Reuniao {
 
     public void confirmarParticipante(Funcionario funcionario) {
         this.participantes.add(funcionario);
+    }
+
+    public void atualizarinformacoes(DadosAtualizarReuniao dados) {
+        if (dados != null){
+            if (dados.dataHora() != null){
+                this.dataHora = dados.dataHora();
+            }
+            if (StringUtils.hasText(dados.pauta())){
+                this.pauta = dados.pauta();
+            }
+        }
+
     }
 }

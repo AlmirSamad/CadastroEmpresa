@@ -1,9 +1,12 @@
 package emp.cad.api.reuniao.controller;
 
 import emp.cad.api.reuniao.dto.DadosAgendamentoReuniao;
+import emp.cad.api.reuniao.dto.DadosAtualizarReuniao;
 import emp.cad.api.reuniao.dto.DadosConfrimacaoPresenca;
 import emp.cad.api.reuniao.dto.DadosDetalhamentoReuniao;
+import emp.cad.api.reuniao.repository.ReuniaoRepository;
 import emp.cad.api.reuniao.service.ReuniaoService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,27 +14,28 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("reunioes") // Ajustado para o plural
+@RequestMapping("reunioes")
+@SecurityRequirement(name = "bearer-key")
 public class ReuniaoController {
 
     @Autowired
     private ReuniaoService reuniaoService;
 
+    @Autowired
+    private ReuniaoRepository reuniaoRepository;
 
 
-    // 1. Rota para Agendar a Reunião
+
     @PostMapping
     @Transactional
     public ResponseEntity agendar(@RequestBody @Valid DadosAgendamentoReuniao dados)  {
 
-        // O service salva no banco e devolve a entidade preenchida com o ID
+
         var reuniao = reuniaoService.agendar(dados);
 
-        // Convertendo a entidade salva para o DTO de saída
         return ResponseEntity.ok(new DadosDetalhamentoReuniao(reuniao));
     }
 
-    // 2. Rota para o Funcionário confirmar presença (RSVP)
     @PostMapping("/{idReuniao}/participantes/{idFuncionario}")
     @Transactional
     public ResponseEntity confirmarPresenca(@PathVariable Long idReuniao, @PathVariable Long idFuncionario) {
@@ -45,6 +49,15 @@ public class ReuniaoController {
         return ResponseEntity.ok("Presença confirmada com sucesso!");
     }
 
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity atualizarReuniao(@PathVariable Long idReuniao, DadosAtualizarReuniao dados){
+        var reuniao = reuniaoService.atualizar(idReuniao, dados);
+
+        return ResponseEntity.ok(new DadosDetalhamentoReuniao(reuniao));
+
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<DadosDetalhamentoReuniao> detalhar(@PathVariable Long id) {
 
@@ -52,4 +65,6 @@ public class ReuniaoController {
 
         return ResponseEntity.ok(detalhamento);
     }
+
+
 }

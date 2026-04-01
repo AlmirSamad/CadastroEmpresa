@@ -8,6 +8,7 @@ import emp.cad.api.funcionario.dto.FuncionarioDTO;
 import emp.cad.api.funcionario.dto.ListagemFuncionarioDTO;
 import emp.cad.api.funcionario.entity.Funcionario;
 import emp.cad.api.funcionario.repository.FuncionarioRepository;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("funcionario")
+@SecurityRequirement(name = "bearer-key")
 public class FuncionarioController {
 
     @Autowired
